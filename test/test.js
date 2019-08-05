@@ -391,6 +391,34 @@ describe("S3rver Tests", function() {
     expect(objects.Contents).to.have.lengthOf(0);
   });
 
+  it("should store a text object when POSTed using traditional url-form-encoded", async function() {
+
+    const formData = {
+        key: text,
+        file:
+    }
+
+    const res = await request.post({
+      method: "POST",
+      baseUrl: s3Client.config.endpoint,
+      url: `/${buckets[0].name}`,
+      // XXX form url encoded
+      body: {
+          key: "text",
+          file:
+      },
+      resolveWithFullResponse: true
+    });
+    expect(res.statusCode).to.equal(200);
+    const object = await s3Client
+      .getObject({ Bucket: buckets[0].name, Key: "text" })
+      .promise();
+    expect(data.ContentType).to.equal("binary/octet-stream");
+    expect(data.Body.toString()).to.equal("Hello!");
+
+
+  });
+
   it("should store a text object in a bucket", async function() {
     const data = await s3Client
       .putObject({ Bucket: buckets[0].name, Key: "text", Body: "Hello!" })
