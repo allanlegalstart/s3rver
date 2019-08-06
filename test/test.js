@@ -393,28 +393,23 @@ describe("S3rver Tests", function() {
 
   it("should store a text object when POSTed using traditional url-form-encoded", async function() {
 
-    const formData = {
-        key: text,
-        file:
-    }
-
+    const file = path.join(__dirname, "resources/post_file.txt");
     const res = await request.post({
       method: "POST",
       baseUrl: s3Client.config.endpoint,
       url: `/${buckets[0].name}`,
-      // XXX form url encoded
-      body: {
-          key: "text",
-          file:
+      formData: {
+        key: "text",
+        file: fs.createReadStream(file),
       },
       resolveWithFullResponse: true
     });
-    expect(res.statusCode).to.equal(200);
+    expect(res.statusCode).to.equal(201);
     const object = await s3Client
       .getObject({ Bucket: buckets[0].name, Key: "text" })
       .promise();
-    expect(data.ContentType).to.equal("binary/octet-stream");
-    expect(data.Body.toString()).to.equal("Hello!");
+    expect(object.ContentType).to.equal("binary/octet-stream");
+    expect(object.Body.toString()).to.equal("Hello!\n");
 
 
   });
