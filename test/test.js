@@ -392,7 +392,6 @@ describe("S3rver Tests", function() {
   });
 
   it("should store a text object when POSTed using traditional url-form-encoded", async function() {
-
     const file = path.join(__dirname, "resources/post_file.txt");
     const res = await request.post({
       method: "POST",
@@ -400,7 +399,7 @@ describe("S3rver Tests", function() {
       url: `/${buckets[0].name}`,
       formData: {
         key: "text",
-        file: fs.createReadStream(file),
+        file: fs.createReadStream(file)
       },
       resolveWithFullResponse: true
     });
@@ -410,8 +409,6 @@ describe("S3rver Tests", function() {
       .promise();
     expect(object.ContentType).to.equal("binary/octet-stream");
     expect(object.Body.toString()).to.equal("Hello!\n");
-
-
   });
 
   it("should store a text object in a bucket", async function() {
